@@ -1,32 +1,51 @@
 import streamlit as st
+import requests
+import zipfile
+import io
+from io import BytesIO
 import urllib.parse
 
 st.set_page_config(page_title="ComicCraft-AI", page_icon="💬")
-st.title("💬 ComicCraft-AI")
-st.write("Welcome to your Comic Creator!")
+st.title("ComicCraft-AI 💬")
+st.write("Your story to 4 panel comic!")
 
-story = st.text_area("Un comic story ah inga type pannu:", placeholder="Eg: A cat superhero flying in Madurai...")
+story = st.text_area("Story ah inga type pannu da:")
 
 if st.button("Generate Comic"):
     if story:
-        st.success(f"Story received: {story}")
+        st.success("Story received! Your Comic is Ready!")
         
-        # Story ah 4 panels ah split pannrom
-        st.write("### Your Comic is Ready! 🔥")
-        
-        prompts = [
-            f"comic book panel 1, {story}, cartoon style, vibrant",
-            f"comic book panel 2, {story}, action scene, cartoon style",
-            f"comic book panel 3, {story}, funny expression, cartoon style",
-            f"comic book panel 4, {story}, epic finale, cartoon style"
-        ]
-        
+        image_urls = []
         cols = st.columns(2)
-        for i, p in enumerate(prompts):
-            encoded_prompt = urllib.parse.quote(p)
-            image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=512&height=512&seed={i}"
-            cols[i % 2].image(image_url, caption=f"Panel {i+1}")
+        
+        for i in range(4):
+            prompt = urllib.parse.quote(f"{story}, comic panel {i+1}, comic book style, vibrant")
+            img_url = f"https://image.pollinations.ai/prompt/{prompt}"
+            image_urls.append(img_url)
+            
+            with cols[i % 2]:
+                st.subheader(f"Panel {i+1}")
+                st.image(img_url, caption=f"Panel {i+1}")
 
-        st.balloons()
+        # DOWNLOAD PART - ITHA THAAN ADD PANNOM
+        st.write("---")
+        st.subheader("📥 Download Pannu da!")
+        
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zip_file:
+            for idx, url in enumerate(image_urls):
+                try:
+                    r = requests.get(url)
+                    zip_file.writestr(f"Panel_{idx+1}.jpg", r.content)
+                except:
+                    pass
+        zip_buffer.seek(0)
+
+        st.download_button(
+            label="🔥 Download All 4 Panels as ZIP",
+            data=zip_buffer,
+            file_name="ComicCraft_Comic.zip",
+            mime="application/zip"
+        )
     else:
-        st.warning("Macha, story ah type pannu da!")
+        st.warning("Macha story type pannu da!")
