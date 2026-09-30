@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<title>ComicCraftAI - Final</title>
+<link rel="icon" href="data:,">
+<style>
+body{font-family:Arial;background:#0f0f0f;color:white;padding:20px}
+.container{max-width:800px;margin:auto;background:#1e1e1e;padding:30px;border-radius:15px}
+h1{color:#ff6b00;text-align:center}
+textarea{width:100%;height:120px;padding:15px;border-radius:10px;background:#2a2a2a;color:white;border:1px solid #444}
+button{width:100%;padding:15px;background:#ff6b00;color:white;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:15px}
+button:hover{background:#ff8533}
+.panel{margin-top:20px;background:#2a2a2a;padding:15px;border-radius:10px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎨 ComicCraftAI 🎨</h1>
+<p style="text-align:center">Your AI Comic Generator is LIVE!</p>
+<textarea id="story" placeholder="Enter your comic story here... Eg: A cat superhero saves city from alien dogs..."></textarea>
+<button onclick="generate()">GENERATE COMIC ✨</button>
+<div id="result"></div>
+</div>
+<script>
+function generate(){
+  let story = document.getElementById('story').value;
+  if(!story){alert('Story type pannu da!');return;}
+  document.getElementById('result').innerHTML = <div class='panel'><h3>🔥 Generating...</h3><p>Story: ${story}</p><p>AI panels creating... (Demo mode - Gemini API key add pannanum)</p><p style='color:#ff6b00'>Next: Full image generation ready!</p></div>;
+}
+</script>
+</body>
+</html>
